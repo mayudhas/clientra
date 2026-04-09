@@ -31,11 +31,34 @@ declare module 'vue-router/auto-routes' {
       '/',
       Record<never, never>,
       Record<never, never>,
+      | '/(main)/crm/clients'
+      | '/(main)/crm/invoices'
+      | '/(main)/crm/projects'
       | '/(main)/dashboard/default'
-      | '/(main)/starter'
-      | '/(main)/utils/color'
-      | '/(main)/utils/shadow'
-      | '/(main)/utils/typography'
+      | '/(main)/management/tenants'
+      | '/(main)/management/users'
+      | '/(main)/settings'
+    >,
+    '/(main)/crm/clients': RouteRecordInfo<
+      '/(main)/crm/clients',
+      '/crm/clients',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/invoices': RouteRecordInfo<
+      '/(main)/crm/invoices',
+      '/crm/invoices',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/projects': RouteRecordInfo<
+      '/(main)/crm/projects',
+      '/crm/projects',
+      Record<never, never>,
+      Record<never, never>,
+      | never
     >,
     '/(main)/dashboard/default': RouteRecordInfo<
       '/(main)/dashboard/default',
@@ -44,30 +67,23 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/(main)/starter': RouteRecordInfo<
-      '/(main)/starter',
-      '/starter',
+    '/(main)/management/tenants': RouteRecordInfo<
+      '/(main)/management/tenants',
+      '/management/tenants',
       Record<never, never>,
       Record<never, never>,
       | never
     >,
-    '/(main)/utils/color': RouteRecordInfo<
-      '/(main)/utils/color',
-      '/utils/color',
+    '/(main)/management/users': RouteRecordInfo<
+      '/(main)/management/users',
+      '/management/users',
       Record<never, never>,
       Record<never, never>,
       | never
     >,
-    '/(main)/utils/shadow': RouteRecordInfo<
-      '/(main)/utils/shadow',
-      '/utils/shadow',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/(main)/utils/typography': RouteRecordInfo<
-      '/(main)/utils/typography',
-      '/utils/typography',
+    '/(main)/settings': RouteRecordInfo<
+      '/(main)/settings',
+      '/settings',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -109,13 +125,33 @@ declare module 'vue-router/auto-routes' {
     'src/pages/(main).vue': {
       routes:
         | '/(main)'
+        | '/(main)/crm/clients'
+        | '/(main)/crm/invoices'
+        | '/(main)/crm/projects'
         | '/(main)/dashboard/default'
-        | '/(main)/starter'
-        | '/(main)/utils/color'
-        | '/(main)/utils/shadow'
-        | '/(main)/utils/typography'
+        | '/(main)/management/tenants'
+        | '/(main)/management/users'
+        | '/(main)/settings'
       views:
         | 'default'
+    }
+    'src/pages/(main)/crm/clients.vue': {
+      routes:
+        | '/(main)/crm/clients'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/invoices.vue': {
+      routes:
+        | '/(main)/crm/invoices'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/projects.vue': {
+      routes:
+        | '/(main)/crm/projects'
+      views:
+        | never
     }
     'src/pages/(main)/dashboard/default.vue': {
       routes:
@@ -123,27 +159,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/(main)/starter.vue': {
+    'src/pages/(main)/management/tenants.vue': {
       routes:
-        | '/(main)/starter'
+        | '/(main)/management/tenants'
       views:
         | never
     }
-    'src/pages/(main)/utils/color.vue': {
+    'src/pages/(main)/management/users.vue': {
       routes:
-        | '/(main)/utils/color'
+        | '/(main)/management/users'
       views:
         | never
     }
-    'src/pages/(main)/utils/shadow.vue': {
+    'src/pages/(main)/settings.vue': {
       routes:
-        | '/(main)/utils/shadow'
-      views:
-        | never
-    }
-    'src/pages/(main)/utils/typography.vue': {
-      routes:
-        | '/(main)/utils/typography'
+        | '/(main)/settings'
       views:
         | never
     }
