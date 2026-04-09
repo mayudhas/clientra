@@ -3,6 +3,7 @@ import {createStore} from 'vuex'
 // import 'es6-promise/auto';
 import layout from './modules/layout';
 import menu from './modules/menu';
+import auth from './modules/auth';
 // import chat from './modules/chat';
 // import product from './modules/product';
 // import email from './modules/email';
@@ -43,9 +44,9 @@ export default createStore({
       }
     },
     modules: {
+      auth,
       layout,
       menu,
-
     }
 });
 
