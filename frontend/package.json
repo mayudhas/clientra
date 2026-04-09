@@ -1,0 +1,32 @@
+{
+  "name": "starter-kit",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "core-js": "^3.8.3",
+    "sass": "^1.58.0",
+    "sass-loader": "^13.2.0",
+    "swiper": "^9.0.3",
+    "vue": "^3.2.13",
+    "vue-feather": "^2.0.0",
+    "vue-router": "^4.1.6",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

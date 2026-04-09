@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "headTitle1": "General",
+      "type": "headtitle"
+    },
+    {
+      "title": "Dashboard",
+      "icon": "stroke-home",
+      "iconf":"fill-home",
+      "type": "sub",
+      "active": false
+     
+    },
+    {
+      "title": "Raise Support",
+      "icon": "stroke-social",
+      "iconf":"fill-special",
+      "type": "sub",
+      "active": false
+    },
+    {
+      "title": "Documentation",
+      "icon": "stroke-form",
+      "iconf":"fill-from",
+      "type": "sub",
+      "active": false
+    }
+  ]}
