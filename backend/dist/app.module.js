@@ -12,6 +12,10 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const tenants_module_1 = require("./tenants/tenants.module");
+const clients_module_1 = require("./clients/clients.module");
+const projects_module_1 = require("./projects/projects.module");
+const invoices_module_1 = require("./invoices/invoices.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,11 +35,15 @@ exports.AppModule = AppModule = __decorate([
                     password: configService.get('DB_PASSWORD', 'postgres'),
                     database: configService.get('DB_NAME', 'clientra'),
                     entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                    synchronize: configService.get('NODE_ENV') !== 'production',
-                    logging: configService.get('NODE_ENV') === 'development',
+                    synchronize: false,
+                    logging: true,
                 }),
                 inject: [config_1.ConfigService],
             }),
+            tenants_module_1.TenantsModule,
+            clients_module_1.ClientsModule,
+            projects_module_1.ProjectsModule,
+            invoices_module_1.InvoicesModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
