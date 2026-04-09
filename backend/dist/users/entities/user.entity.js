@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const class_transformer_1 = require("class-transformer");
 const base_entity_1 = require("../../common/entities/base.entity");
 const tenant_entity_1 = require("../../tenants/entities/tenant.entity");
 let User = class User extends base_entity_1.BaseEntity {
@@ -35,6 +36,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    (0, class_transformer_1.Exclude)(),
     (0, typeorm_1.Column)({ name: 'users_password' }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
