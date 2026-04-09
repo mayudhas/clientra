@@ -18,3 +18,6 @@ Thumbs.db
 # ─── Docker ───────────────────────────────────────────────
 # (docker-compose.yml itself is committed, but overrides are not)
 docker-compose.override.yml
+
+# ─── Temp Reference ───────────────────────────────────────
+template/
