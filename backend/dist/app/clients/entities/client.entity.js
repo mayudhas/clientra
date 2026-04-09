@@ -18,6 +18,11 @@ const invoice_entity_1 = require("../../invoices/entities/invoice.entity");
 let Client = class Client extends base_entity_1.BaseEntity {
     name;
     email;
+    company;
+    phone;
+    address;
+    notes;
+    status;
     tenantId;
     tenant;
     projects;
@@ -36,6 +41,26 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'clients_email', nullable: true }),
     __metadata("design:type", String)
 ], Client.prototype, "email", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clients_company', nullable: true }),
+    __metadata("design:type", String)
+], Client.prototype, "company", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clients_phone', nullable: true }),
+    __metadata("design:type", String)
+], Client.prototype, "phone", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clients_address', type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Client.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clients_notes', type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Client.prototype, "notes", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'clients_status', length: 20, default: 'active' }),
+    __metadata("design:type", String)
+], Client.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'clients_tenant_id', type: 'uuid' }),
     __metadata("design:type", String)
