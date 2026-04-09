@@ -12,24 +12,53 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const base_entity_1 = require("../../common/entities/base.entity");
+const tenant_entity_1 = require("../../tenants/entities/tenant.entity");
 let User = class User extends base_entity_1.BaseEntity {
+    name;
     email;
-    fullName;
-    isActive;
+    password;
+    role;
+    tenantId;
+    tenant;
 };
 exports.User = User;
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid', { name: 'users_id' }),
+    __metadata("design:type", String)
+], User.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'users_name' }),
+    __metadata("design:type", String)
+], User.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ unique: true, name: 'users_email' }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ name: 'users_password' }),
     __metadata("design:type", String)
-], User.prototype, "fullName", void 0);
+], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: true }),
-    __metadata("design:type", Boolean)
-], User.prototype, "isActive", void 0);
+    (0, typeorm_1.Column)({ default: 'member', name: 'users_role' }),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'users_tenant_id', nullable: true, type: 'uuid' }),
+    __metadata("design:type", String)
+], User.prototype, "tenantId", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ name: 'users_created_at' }),
+    __metadata("design:type", Date)
+], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ name: 'users_updated_at' }),
+    __metadata("design:type", Date)
+], User.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => tenant_entity_1.Tenant, (tenant) => tenant.users),
+    (0, typeorm_1.JoinColumn)({ name: 'users_tenant_id' }),
+    __metadata("design:type", tenant_entity_1.Tenant)
+], User.prototype, "tenant", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);
