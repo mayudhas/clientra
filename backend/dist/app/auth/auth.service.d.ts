@@ -21,12 +21,26 @@ export declare class AuthService {
         role: string;
     }>;
     login(loginDto: LoginDto): Promise<{
-        access_token: string;
-        refresh_token: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            role: string;
+            tenantId: any;
+        };
     }>;
     refreshToken(refreshTokenDto: RefreshTokenDto): Promise<{
-        access_token: string;
-        refresh_token: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            role: string;
+            tenantId: any;
+        };
     }>;
     private generateTokens;
 }
