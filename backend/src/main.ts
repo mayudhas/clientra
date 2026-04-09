@@ -10,6 +10,13 @@ async function bootstrap() {
   // Global prefixes
   app.setGlobalPrefix('api');
 
+  // Enable CORS
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   // Global pipes for DTO validation
   app.useGlobalPipes(
     new ValidationPipe({
