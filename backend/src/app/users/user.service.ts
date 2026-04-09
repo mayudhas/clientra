@@ -9,8 +9,9 @@ export class UserService extends CoreService<User> {
     super(userRepository);
   }
 
-  // Tambahkan business logic spesifik user di sini
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findByEmail(email);
+    return this.userRepository.findByEmail(email);
   }
+
+  // Tambahkan business logic spesifik user di sini
 }

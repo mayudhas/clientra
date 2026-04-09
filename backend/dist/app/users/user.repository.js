@@ -25,7 +25,7 @@ let UserRepository = class UserRepository extends core_repository_1.CoreReposito
         this.userRepository = userRepository;
     }
     async findByEmail(email) {
-        return await this.userRepository.findOne({ where: { email } });
+        return this.userRepository.findOne({ where: { email } });
     }
 };
 exports.UserRepository = UserRepository;
