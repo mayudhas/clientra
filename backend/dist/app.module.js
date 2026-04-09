@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const auth_module_1 = require("./app/auth/auth.module");
 const tenants_module_1 = require("./app/tenants/tenants.module");
 const clients_module_1 = require("./app/clients/clients.module");
 const projects_module_1 = require("./app/projects/projects.module");
@@ -21,6 +22,7 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            auth_module_1.AuthModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),

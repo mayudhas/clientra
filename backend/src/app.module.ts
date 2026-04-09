@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './app/auth/auth.module';
 import { TenantsModule } from './app/tenants/tenants.module';
 import { ClientsModule } from './app/clients/clients.module';
 import { ProjectsModule } from './app/projects/projects.module';
@@ -9,6 +10,7 @@ import { UsersModule } from './app/users/users.module';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
