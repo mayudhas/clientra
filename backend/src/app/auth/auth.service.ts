@@ -110,19 +110,26 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       role: user.role,
-      tenantId: tenantIdField, 
+      tenantId: tenantIdField,
     };
 
     const accessToken = this.jwtService.sign(payload);
-    
+
     const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET || 'super-refresh-secret',
       expiresIn: '7d', // Refresh token umur 7 hari
     });
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        tenantId: tenantIdField,
+      },
     };
   }
 }

@@ -135,8 +135,15 @@ let AuthService = class AuthService {
             expiresIn: '7d',
         });
         return {
-            access_token: accessToken,
-            refresh_token: refreshToken,
+            accessToken,
+            refreshToken,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                tenantId: tenantIdField,
+            },
         };
     }
 };

@@ -17,11 +17,25 @@ export declare class AuthController {
         role: string;
     }>;
     login(loginDto: LoginDto): Promise<{
-        access_token: string;
-        refresh_token: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            role: string;
+            tenantId: any;
+        };
     }>;
     refresh(refreshTokenDto: RefreshTokenDto): Promise<{
-        access_token: string;
-        refresh_token: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            role: string;
+            tenantId: any;
+        };
     }>;
 }
