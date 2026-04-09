@@ -22,8 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('User not found or inactive');
     }
-    
-    // Me-return payload/user ini akan disuntikkan ke dalam `req.user` HTTP Request 
+
     return {
       userId: payload.sub,
       email: payload.email,
