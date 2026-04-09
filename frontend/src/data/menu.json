@@ -8,9 +8,17 @@
       "title": "Dashboard",
       "icon": "stroke-home",
       "iconf":"fill-home",
-      "type": "sub",
+      "type": "link",
+      "path": "/",
       "active": false
-     
+    },
+    {
+      "title": "Clients",
+      "icon": "stroke-user",
+      "iconf":"fill-user",
+      "type": "link",
+      "path": "/clients",
+      "active": false
     },
     {
       "title": "Raise Support",

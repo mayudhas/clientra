@@ -3,12 +3,15 @@ import AuthService from '../../services/auth.service';
 const token = localStorage.getItem('token');
 let user = null;
 try {
-  user = JSON.parse(localStorage.getItem('user'));
+  const storedUser = localStorage.getItem('user');
+  user = (storedUser && storedUser !== 'undefined') ? JSON.parse(storedUser) : null;
 } catch (e) {
-  // Ignored if parser fails
+  user = null;
 }
 
-const initialState = token
+const hasValidToken = token && token !== 'undefined' && token !== 'null';
+
+const initialState = hasValidToken
   ? { status: { loggedIn: true }, user, token }
   : { status: { loggedIn: false }, user: null, token: null };
 
@@ -19,16 +22,23 @@ export default {
     login({ commit }, userPayload) {
       return AuthService.login(userPayload).then(
         response => {
-          const rawToken = response.data.token || response.data.accessToken;
-          const userData = response.data.user || {};
+          // Robust extraction: check both wrapped and unwrapped data
+          const data = response.data || {};
+          const result = data.result || data;
           
-          if (rawToken) {
+          const rawToken = result.token || result.accessToken || result.result?.accessToken;
+          const userData = result.user || result.result?.user || {};
+          
+          if (rawToken && rawToken !== 'undefined' && rawToken !== 'null') {
             localStorage.setItem('token', rawToken);
             localStorage.setItem('user', JSON.stringify(userData));
+            commit('loginSuccess', { token: rawToken, user: userData });
+            return Promise.resolve(data);
+          } else {
+            console.error('Failed to extract token from response:', data);
+            commit('loginFailure');
+            return Promise.reject(new Error('Format token tidak valid dari server'));
           }
-          
-          commit('loginSuccess', { token: rawToken, user: userData });
-          return Promise.resolve(response.data);
         },
         error => {
           commit('loginFailure');

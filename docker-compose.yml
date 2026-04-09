@@ -50,19 +50,23 @@ services:
     networks:
       - clientra_network
 
-  # ─── SvelteKit Frontend ───────────────────────────────────
+  # ─── Vue.js Frontend (Dev Mode) ────────────────────────────
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: clientra_frontend
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+      VUE_APP_API_URL: ${VITE_API_URL:-http://localhost:3000}
+      NODE_ENV: development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - '5173:80'
+      - '8080:8080'
     depends_on:
       - backend
     networks:

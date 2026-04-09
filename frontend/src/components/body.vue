@@ -4,8 +4,8 @@
     <svg>
       <defs></defs>
       <filter id="goo">
-        <fegaussianblur in="SourceGraphic" stddeviation="11" result="blur"></fegaussianblur>
-        <fecolormatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"> </fecolormatrix>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="blur"></feGaussianBlur>
+        <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"> </feColorMatrix>
       </filter>
     </svg>
   </div>
@@ -40,7 +40,7 @@
   
   import { layoutClasses } from '../constants/layout';
   import Header from './header';
-  import Sidebar from './sidebar';
+  import Sidebar from './sidebar/index.vue';
   import Footer from './footer.vue';
   // import Customizer from './customizer';
   import TapTop from './tapTop.vue';
@@ -59,7 +59,6 @@
       return{
         loading: true,
         mobileheader_toggle_var: false,
-        sidebar_toggle_var: false,
         horizontal_Sidebar: true,
         resized:false,
         layoutobj:{}
@@ -108,16 +107,12 @@
             });
           });
         });
-        this.layoutobj = layoutClasses.find((item) => Object.keys(item).pop() === this.layout.settings.layout);
-      console.log("layobj==>",this.layoutobj)
-
+        const layoutItem = layoutClasses.find((item) => Object.keys(item).pop() === this.layout.settings.layout);
         if((window.innerWidth < 991 && this.layout.settings.layout === 'LosAngeles') || (window.innerWidth < 991 && this.layout.settings.layout === 'Singapore') || (window.innerWidth < 991 && this.layout.settings.layout === 'Barcelona')) {
-          const newlayout = JSON.parse(JSON.stringify(this.layoutobj).replace('horizontal-wrapper', 'compact-wrapper'));
-      // console.log("newlayobj==>",newlayout)
-
-          this.layoutobj = JSON.parse(JSON.stringify(newlayout))[this.layout.settings.layout];
+          const newlayout = JSON.parse(JSON.stringify(layoutItem).replace('horizontal-wrapper', 'compact-wrapper'));
+          this.layoutobj = newlayout[this.layout.settings.layout];
         } else  {
-          this.layoutobj = JSON.parse(JSON.stringify(this.layoutobj))[this.layout.settings.layout]; 
+          this.layoutobj = layoutItem ? layoutItem[this.layout.settings.layout] : 'compact-wrapper'; 
         }
       },
       sidebar_toggle_var: function (){
@@ -131,8 +126,8 @@
       this.$store.dispatch('layout/set');
       // this.$router.replace({ 'query': null }).catch(err => err);
       this.layout.settings.layout = this.$route.query.layout? this.$route.query.layout : 'Dubai';
-      this.layoutobj = layoutClasses.find((item) => Object.keys(item).pop() === this.layout.settings.layout);
-      this.layoutobj = JSON.parse(JSON.stringify(this.layoutobj))[this.layout.settings.layout]; 
+      const layoutItem = layoutClasses.find((item) => Object.keys(item).pop() === this.layout.settings.layout);
+      this.layoutobj = layoutItem ? layoutItem[this.layout.settings.layout] : 'compact-wrapper'; 
 
     },
     methods:{

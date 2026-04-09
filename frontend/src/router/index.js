@@ -35,7 +35,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     // Check local storage / vuex auth state
-    const loggedIn = store.state.auth.status.loggedIn;
+    const token = localStorage.getItem('token');
+    const hasToken = !!token && token !== 'undefined' && token !== 'null';
+    const loggedIn = store.state.auth.status.loggedIn || hasToken;
     
     // Block visitors from restricted paths
     if (to.matched.some(record => record.meta.requiresAuth)) {
