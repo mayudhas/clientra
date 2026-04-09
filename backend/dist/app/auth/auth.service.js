@@ -65,6 +65,22 @@ let AuthService = class AuthService {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(registerDto.password, salt);
+        if (registerDto.setupKey === (process.env.SETUP_KEY || 'clientra_super_secret')) {
+            const superAdminUser = await this.userService.create({
+                email: registerDto.email,
+                name: registerDto.name,
+                password: hashedPassword,
+                role: 'super_admin',
+            });
+            return {
+                message: 'Super Admin created successfully',
+                userId: superAdminUser.id,
+                role: superAdminUser.role,
+            };
+        }
+        if (!registerDto.tenantName) {
+            throw new common_1.BadRequestException('tenantName is required for standard registration');
+        }
         const tenant = await this.tenantService.create({ name: registerDto.tenantName });
         const user = await this.userService.create({
             email: registerDto.email,
@@ -77,6 +93,7 @@ let AuthService = class AuthService {
             message: 'User and Tenant created successfully',
             userId: user.id,
             tenantId: tenant.id,
+            role: user.role,
         };
     }
     async login(loginDto) {

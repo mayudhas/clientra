@@ -8,7 +8,13 @@ export declare class AuthController {
     register(registerDto: RegisterDto): Promise<{
         message: string;
         userId: string;
+        role: string;
+        tenantId?: undefined;
+    } | {
+        message: string;
+        userId: string;
         tenantId: string;
+        role: string;
     }>;
     login(loginDto: LoginDto): Promise<{
         access_token: string;

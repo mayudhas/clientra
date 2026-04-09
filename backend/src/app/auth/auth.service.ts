@@ -28,22 +28,41 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(registerDto.password, salt);
 
-    // 3. Opsi A: Buat entitas Tenant untuk Admin pengguna tersebut
-    const tenant = await this.tenantService.create({ name: registerDto.tenantName });
+    // 3. Cek apakah ini pendaftaran Super Admin
+    if (registerDto.setupKey === (process.env.SETUP_KEY || 'clientra_super_secret')) {
+      const superAdminUser = await this.userService.create({
+        email: registerDto.email,
+        name: registerDto.name,
+        password: hashedPassword,
+        role: 'super_admin',
+      });
 
-    // 4. Buat User sebagai "admin" pada Tenant tersebut.
+      return {
+        message: 'Super Admin created successfully',
+        userId: superAdminUser.id,
+        role: superAdminUser.role,
+      };
+    }
+
+    // 4. Jika bukan super admin, maka wajib ada tenantName
+    if (!registerDto.tenantName) {
+      throw new BadRequestException('tenantName is required for standard registration');
+    }
+
+    const tenant = await this.tenantService.create({ name: registerDto.tenantName });
     const user = await this.userService.create({
       email: registerDto.email,
       name: registerDto.name,
       password: hashedPassword,
-      role: 'admin',
-      tenant: tenant as any, // Assign relasi
+      role: 'admin', // Admin di level tenant
+      tenant: tenant as any,
     });
 
     return {
       message: 'User and Tenant created successfully',
       userId: user.id,
       tenantId: tenant.id,
+      role: user.role,
     };
   }
 
