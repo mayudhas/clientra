@@ -1,4 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Tenant } from '../../tenants/entities/tenant.entity';
 
@@ -13,6 +14,7 @@ export class User extends BaseEntity {
   @Column({ unique: true, name: 'users_email' })
   email: string;
 
+  @Exclude()
   @Column({ name: 'users_password' })
   password: string;
 
