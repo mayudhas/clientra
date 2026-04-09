@@ -13,8 +13,7 @@ export class UserRepository extends CoreRepository<User> {
     super(userRepository);
   }
 
-  // Tambahkan metode spesifik user di sini (misal: findByEmail)
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { email } });
+    return this.userRepository.findOne({ where: { email } });
   }
 }

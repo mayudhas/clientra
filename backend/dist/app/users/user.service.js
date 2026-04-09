@@ -20,7 +20,7 @@ let UserService = class UserService extends core_service_1.CoreService {
         this.userRepository = userRepository;
     }
     async findByEmail(email) {
-        return await this.userRepository.findByEmail(email);
+        return this.userRepository.findByEmail(email);
     }
 };
 exports.UserService = UserService;

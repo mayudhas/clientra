@@ -58,8 +58,7 @@ let AuthService = class AuthService {
         this.tenantService = tenantService;
     }
     async register(registerDto) {
-        const existingUsersList = await this.userService.findAll();
-        const existingUser = existingUsersList.find((u) => u.email === registerDto.email);
+        const existingUser = await this.userService.findByEmail(registerDto.email);
         if (existingUser) {
             throw new common_1.BadRequestException('User with this email already exists.');
         }
@@ -97,8 +96,7 @@ let AuthService = class AuthService {
         };
     }
     async login(loginDto) {
-        const users = await this.userService.findAll();
-        const userDetail = users.find((u) => u.email === loginDto.email);
+        const userDetail = await this.userService.findByEmail(loginDto.email);
         if (!userDetail) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }

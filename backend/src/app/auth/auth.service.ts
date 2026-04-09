@@ -18,8 +18,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     // 1. Periksa apakah pengguna dengan email tersebut sudah terdaftar
-    const existingUsersList = await this.userService.findAll(); // Untuk mode simplifikasi. Real app = findByEmail khusus.
-    const existingUser = existingUsersList.find((u) => u.email === registerDto.email);
+    const existingUser = await this.userService.findByEmail(registerDto.email);
     if (existingUser) {
       throw new BadRequestException('User with this email already exists.');
     }
@@ -68,11 +67,8 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     // 1. Temukan user 
-    const users = await this.userService.findAll();
-    const userDetail = users.find((u) => u.email === loginDto.email); // Idealkan menggunakan repository query khusus nantinya.
+    const userDetail = await this.userService.findByEmail(loginDto.email);
     
-    // Tapi karena findAll tidak populate relasi tenant atau jika tenantId null?
-    // Lebih baik kita asumsikan userDetail terambil atau kita bisa throw custom error:
     if (!userDetail) {
       throw new UnauthorizedException('Invalid credentials');
     }
