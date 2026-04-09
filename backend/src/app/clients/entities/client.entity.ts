@@ -15,6 +15,21 @@ export class Client extends BaseEntity {
   @Column({ name: 'clients_email', nullable: true })
   email: string;
 
+  @Column({ name: 'clients_company', nullable: true })
+  company: string;
+
+  @Column({ name: 'clients_phone', nullable: true })
+  phone: string;
+
+  @Column({ name: 'clients_address', type: 'text', nullable: true })
+  address: string;
+
+  @Column({ name: 'clients_notes', type: 'text', nullable: true })
+  notes: string;
+
+  @Column({ name: 'clients_status', length: 20, default: 'active' })
+  status: string;
+
   @Column({ name: 'clients_tenant_id', type: 'uuid' })
   tenantId: string;
 

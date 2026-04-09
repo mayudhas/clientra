@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'clientra',
   synchronize: false,
   logging: true,
-  entities: [join(__dirname, '**/*.entity{.ts,.js}')],
-  migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
+  entities: [join(__dirname, '../app/**/entities/*.entity{.ts,.js}')],
+  migrations: [join(__dirname, '../database/migrations/*{.ts,.js}')],
   subscribers: [],
 });

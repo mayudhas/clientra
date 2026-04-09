@@ -19,6 +19,11 @@ const routes =[
             name: 'defaultRoot',
             component: Default,
           },
+          {
+            path: 'clients',
+            name: 'clients',
+            component: () => import('../pages/clients/index.vue'),
+          },
         ]
       },
 ]

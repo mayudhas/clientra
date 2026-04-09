@@ -47,8 +47,8 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB_NAME || 'clientra',
     synchronize: false,
     logging: true,
-    entities: [(0, path_1.join)(__dirname, '**/*.entity{.ts,.js}')],
-    migrations: [(0, path_1.join)(__dirname, 'migrations/*{.ts,.js}')],
+    entities: [(0, path_1.join)(__dirname, '../app/**/entities/*.entity{.ts,.js}')],
+    migrations: [(0, path_1.join)(__dirname, '../database/migrations/*{.ts,.js}')],
     subscribers: [],
 });
 //# sourceMappingURL=data-source.js.map

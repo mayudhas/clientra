@@ -6,6 +6,11 @@ export declare class Client extends BaseEntity {
     id: string;
     name: string;
     email: string;
+    company: string;
+    phone: string;
+    address: string;
+    notes: string;
+    status: string;
     tenantId: string;
     createdAt: Date;
     updatedAt: Date;
