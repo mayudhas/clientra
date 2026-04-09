@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { router } from '@/router';
 import Google from '@/assets/images/auth/social-google.svg';
 
+const authStore = useAuthStore();
+const email = ref('');
+const password = ref('');
 const checkbox = ref(false);
 const show1 = ref(false);
 const passwordRules = ref([
   (v: string) => !!v || 'Password is required',
-  (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
+  (v: string) => (v && v.length <= 20) || 'Password must be less than 20 characters'
 ]);
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
+
+async function handleSubmit() {
+  try {
+    await authStore.login({ email: email.value, password: password.value });
+    router.push('/dashboard/default');
+  } catch (err) {
+    // Error handled by store
+  }
+}
 </script>
 
 <template>
@@ -24,9 +38,20 @@ const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) 
     </v-col>
   </v-row>
   <h5 class="text-center my-4 mb-8">Sign in with Email address</h5>
-  <form @submit.prevent class="mt-7 loginForm">
-    <v-text-field :rules="emailRules" label="Email Address / Username" class="mt-4 mb-8" required hide-details="auto"></v-text-field>
+  <v-alert v-if="authStore.error" type="error" variant="tonal" class="mb-4">
+    {{ authStore.error }}
+  </v-alert>
+  <form @submit.prevent="handleSubmit" class="mt-7 loginForm">
+    <v-text-field 
+      v-model="email"
+      :rules="emailRules" 
+      label="Email Address / Username" 
+      class="mt-4 mb-8" 
+      required 
+      hide-details="auto"
+    ></v-text-field>
     <v-text-field
+      v-model="password"
       :rules="passwordRules"
       label="Password"
       required
@@ -50,7 +75,16 @@ const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) 
         <a href="javascript:void(0)" class="text-primary text-decoration-none">Forgot password?</a>
       </div>
     </div>
-    <v-btn color="secondary" block class="mt-2" variant="flat" size="large" :disabled="false" type="submit"> Sign In</v-btn>
+    <v-btn 
+      color="secondary" 
+      block 
+      class="mt-2" 
+      variant="flat" 
+      size="large" 
+      :disabled="authStore.loading" 
+      :loading="authStore.loading"
+      type="submit"
+    > Sign In</v-btn>
   </form>
   <div class="mt-5 text-right">
     <v-divider />
