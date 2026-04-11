@@ -28,7 +28,8 @@ export class UserService extends CoreService<User> {
     
     // We access the underlying TypeORM repository via 'repository' generic from CoreRepository.
     // CoreRepository uses 'repository' property internally.
-    const queryBuilder = (this.userRepository as any).repository.createQueryBuilder('user');
+    const queryBuilder = (this.userRepository as any).repository.createQueryBuilder('user')
+      .leftJoinAndSelect('user.tenant', 'tenant');
     
     // Default: Only filter if isActive is explicitly sent, otherwise show all to admins
     if (filter.isActive !== undefined) {

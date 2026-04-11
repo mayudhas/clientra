@@ -3,7 +3,8 @@ import { ref, watch } from 'vue';
 import { useUsersStore } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';
 import { useNotificationStore } from '@/stores/notification';
-import { EyeIcon, EyeOffIcon } from 'vue-tabler-icons';
+import TenantService from '@/services/tenant.service';
+import { EyeIcon, EyeOffIcon, SearchIcon } from 'vue-tabler-icons';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -24,6 +25,8 @@ const valid = ref(false);
 const loading = ref(false);
 const showPassword = ref(false);
 const formRef = ref<any>(null);
+const tenants = ref<any[]>([]);
+const loadingTenants = ref(false);
 
 const roles = [
   { title: 'Super Admin', value: 'super_admin' },
@@ -41,7 +44,8 @@ const defaultForm = {
   email: '',
   password: '',
   role: 'member',
-  tenantId: ''
+  tenantId: '',
+  isActive: true
 };
 
 const form = ref({ ...defaultForm });
@@ -55,6 +59,9 @@ const rules = {
 watch(() => props.modelValue, (val) => {
   dialog.value = val;
   if (val) {
+    if (authStore.user?.role === 'super_admin') {
+      fetchTenants();
+    }
     if (props.user) {
       form.value = { 
         ...props.user, 
@@ -66,6 +73,18 @@ watch(() => props.modelValue, (val) => {
   }
 });
 
+async function fetchTenants() {
+  loadingTenants.value = true;
+  try {
+    const response = await TenantService.getTenants({ limit: 100 });
+    tenants.value = response.data.data;
+  } catch (error) {
+    console.error('Failed to fetch tenants:', error);
+  } finally {
+    loadingTenants.value = false;
+  }
+}
+
 watch(dialog, (val) => {
   emit('update:modelValue', val);
 });
@@ -76,20 +95,33 @@ async function save() {
 
   loading.value = true;
   try {
-    const payload: any = { ...form.value };
+    // Sanitize payload: only send fields defined in DTO
+    const payload: any = {
+      name: form.value.name,
+      email: form.value.email,
+      role: form.value.role,
+      isActive: form.value.isActive,
+      tenantId: form.value.tenantId
+    };
     
-    // Ensure empty strings don't cause UUID validation errors in Postgres
-    if (!payload.tenantId) {
+    // If role is super_admin, tenant must be null
+    if (payload.role === 'super_admin') {
+      payload.tenantId = null;
+    } else if (!payload.tenantId) {
+      // Ensure empty strings don't cause UUID validation errors in Postgres
       payload.tenantId = null;
     }
     
     if (props.user) {
       // Update
-      if (!payload.password) delete payload.password;
+      if (form.value.password) {
+        payload.password = form.value.password;
+      }
       await usersStore.updateUser(props.user.id, payload);
       notificationStore.showSuccess('User updated successfully');
     } else {
       // Create
+      payload.password = form.value.password;
       await usersStore.createUser(payload);
       notificationStore.showSuccess('User created successfully');
     }
@@ -163,16 +195,25 @@ async function save() {
                 hide-details="auto"
               />
             </v-col>
-            <!-- Tenant selection only for Super Admin -->
-            <v-col v-if="authStore.user?.role === 'super_admin'" cols="12">
-               <v-label class="mb-2 font-weight-medium">Tenant ID (Optional)</v-label>
-               <v-text-field
+            <!-- Tenant selection only for Super Admin, and only if target role is not Super Admin -->
+            <v-col v-if="authStore.user?.role === 'super_admin' && form.role !== 'super_admin'" cols="12">
+               <v-label class="mb-2 font-weight-medium">Assign to Tenant</v-label>
+               <v-autocomplete
                 v-model="form.tenantId"
+                :items="tenants"
+                item-title="name"
+                item-value="id"
                 variant="outlined"
                 color="primary"
                 hide-details="auto"
-                placeholder="Super Admin only"
-              />
+                placeholder="Select a tenant (optional)"
+                :loading="loadingTenants"
+                clearable
+              >
+                <template v-slot:prepend-inner>
+                  <SearchIcon size="18" class="text-secondary" />
+                </template>
+              </v-autocomplete>
             </v-col>
           </v-row>
         </v-form>
