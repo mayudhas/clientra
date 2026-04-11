@@ -12,13 +12,13 @@ export declare class AuthService {
     register(registerDto: RegisterDto): Promise<{
         message: string;
         userId: string;
-        role: string;
+        role: import("../../common/enums/user-role.enum").UserRole;
         tenantId?: undefined;
     } | {
         message: string;
         userId: string;
         tenantId: string;
-        role: string;
+        role: import("../../common/enums/user-role.enum").UserRole;
     }>;
     login(loginDto: LoginDto): Promise<{
         accessToken: string;
@@ -27,7 +27,7 @@ export declare class AuthService {
             id: string;
             name: string;
             email: string;
-            role: string;
+            role: import("../../common/enums/user-role.enum").UserRole;
             tenantId: any;
         };
     }>;
@@ -38,7 +38,7 @@ export declare class AuthService {
             id: string;
             name: string;
             email: string;
-            role: string;
+            role: import("../../common/enums/user-role.enum").UserRole;
             tenantId: any;
         };
     }>;

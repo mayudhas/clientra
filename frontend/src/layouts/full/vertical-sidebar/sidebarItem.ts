@@ -1,14 +1,11 @@
 import {
-  CircleIcon,
-  WindmillIcon,
-  TypographyIcon,
-  ShadowIcon,
-  PaletteIcon,
-  KeyIcon,
-  BugIcon,
   DashboardIcon,
-  BrandChromeIcon,
-  HelpIcon
+  UsersIcon,
+  BriefcaseIcon,
+  FileInvoiceIcon,
+  BuildingIcon,
+  UserCircleIcon,
+  SettingsIcon,
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -28,84 +25,54 @@ export interface menu {
 }
 
 const sidebarItem: menu[] = [
-  { header: 'Dashboard' },
+  // ─── MAIN ────────────────────────────────────────
+  { header: 'Main' },
   {
-    title: 'Default',
+    title: 'Dashboard',
     icon: DashboardIcon,
     to: '/dashboard/default'
   },
+
+  // ─── CRM ─────────────────────────────────────────
   { divider: true },
-  { header: 'Pages' },
+  { header: 'CRM' },
   {
-    title: 'Authentication',
-    icon: KeyIcon,
-    to: '/auth',
-    children: [
-      {
-        title: 'Login',
-        icon: CircleIcon,
-        to: '/authentication/login'
-      },
-      {
-        title: 'Register',
-        icon: CircleIcon,
-        to: '/authentication/register'
-      }
-    ]
+    title: 'Clients',
+    icon: UsersIcon,
+    to: '/crm/clients'
   },
   {
-    title: 'Error 404',
-    icon: BugIcon,
-    to: '/maintenance/error'
-  },
-  { divider: true },
-  { header: 'Utilities' },
-  {
-    title: 'Typography',
-    icon: TypographyIcon,
-    to: '/utils/typography'
+    title: 'Projects',
+    icon: BriefcaseIcon,
+    to: '/crm/projects'
   },
   {
-    title: 'Shadows',
-    icon: ShadowIcon,
-    to: '/utils/shadow'
-  },
-  {
-    title: 'Colors',
-    icon: PaletteIcon,
-    to: '/utils/color'
+    title: 'Invoices',
+    icon: FileInvoiceIcon,
+    to: '/crm/invoices'
   },
 
-  {
-    title: 'Icons',
-    icon: WindmillIcon,
-    to: '/utils/icons',
-    children: [
-      {
-        title: 'Tabler Icons',
-        icon: CircleIcon,
-        to: 'https://tabler.io/icons',
-        type: 'external'
-      },
-      {
-        title: 'Material Icons',
-        icon: CircleIcon,
-        to: 'https://pictogrammers.com/library/mdi/',
-        type: 'external'
-      }
-    ]
-  },
+  // ─── MANAGEMENT ──────────────────────────────────
   { divider: true },
+  { header: 'Management' },
   {
-    title: 'Sample Page',
-    icon: BrandChromeIcon,
-    to: '/starter'
+    title: 'Users',
+    icon: UserCircleIcon,
+    to: '/management/users'
   },
   {
-    title: 'Documentation',
-    icon: HelpIcon,
-    to: 'https://codedthemes.gitbook.io/berry-vuetify/',
-    type: 'external'
+    title: 'Tenants',
+    icon: BuildingIcon,
+    to: '/management/tenants'
+  },
+
+  // ─── SETTINGS ────────────────────────────────────
+  { divider: true },
+  { header: 'Settings' },
+  {
+    title: 'Settings',
+    icon: SettingsIcon,
+    to: '/settings'
   }
 ];
 

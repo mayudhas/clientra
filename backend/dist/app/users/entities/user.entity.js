@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const class_transformer_1 = require("class-transformer");
 const base_entity_1 = require("../../../common/entities/base.entity");
 const tenant_entity_1 = require("../../tenants/entities/tenant.entity");
+const user_role_enum_1 = require("../../../common/enums/user-role.enum");
 let User = class User extends base_entity_1.BaseEntity {
     name;
     email;
@@ -41,7 +42,12 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'member', name: 'users_role' }),
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: user_role_enum_1.UserRole,
+        default: user_role_enum_1.UserRole.MEMBER,
+        name: 'users_role'
+    }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([

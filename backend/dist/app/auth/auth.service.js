@@ -48,6 +48,7 @@ const jwt_1 = require("@nestjs/jwt");
 const bcrypt = __importStar(require("bcrypt"));
 const user_service_1 = require("../users/user.service");
 const tenant_service_1 = require("../tenants/tenant.service");
+const user_role_enum_1 = require("../common/enums/user-role.enum");
 let AuthService = class AuthService {
     jwtService;
     userService;
@@ -69,7 +70,7 @@ let AuthService = class AuthService {
                 email: registerDto.email,
                 name: registerDto.name,
                 password: hashedPassword,
-                role: 'super_admin',
+                role: user_role_enum_1.UserRole.SUPER_ADMIN,
             });
             return {
                 message: 'Super Admin created successfully',
@@ -85,7 +86,7 @@ let AuthService = class AuthService {
             email: registerDto.email,
             name: registerDto.name,
             password: hashedPassword,
-            role: 'admin',
+            role: user_role_enum_1.UserRole.ADMIN,
             tenant: tenant,
         });
         return {
