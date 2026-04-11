@@ -7,11 +7,13 @@ export class RefactorUserRoleToEnum1775716333000 implements MigrationInterface {
         // 1. Create the native ENUM type
         await queryRunner.query(`CREATE TYPE "users_users_role_enum" AS ENUM('super_admin', 'admin', 'member')`);
 
-        // 2. Alter the column type using casting
-        // We use the existing values and cast them to the new enum type
+        // 2. Drop the default value first (SQL requirement when changing to ENUM)
+        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "users_role" DROP DEFAULT`);
+
+        // 3. Alter the column type using casting
         await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "users_role" TYPE "users_users_role_enum" USING ("users_role"::"users_users_role_enum")`);
 
-        // 3. Set the default value for the new type
+        // 4. Set the default value back for the new type
         await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "users_role" SET DEFAULT 'member'`);
     }
 

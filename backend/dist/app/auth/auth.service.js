@@ -48,7 +48,7 @@ const jwt_1 = require("@nestjs/jwt");
 const bcrypt = __importStar(require("bcrypt"));
 const user_service_1 = require("../users/user.service");
 const tenant_service_1 = require("../tenants/tenant.service");
-const user_role_enum_1 = require("../common/enums/user-role.enum");
+const user_role_enum_1 = require("../../common/enums/user-role.enum");
 let AuthService = class AuthService {
     jwtService;
     userService;

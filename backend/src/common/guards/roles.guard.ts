@@ -24,17 +24,19 @@ export class RolesGuard implements CanActivate {
     }
 
     // 1. Super Admin bypasses all role checks
-    if (user.role === UserRole.SUPER_ADMIN) {
+    if (user.role === UserRole.SUPER_ADMIN || user.role === 'super_admin') {
       return true;
     }
 
-    // 2. Exact match
-    if (requiredRoles.includes(user.role)) {
+    // 2. Exact match (using String casting for robustness)
+    const hasRole = requiredRoles.some(role => String(role) === String(user.role));
+    if (hasRole) {
       return true;
     }
 
     // 3. Hierarchy logic: Admin inherits Member permissions
-    if (user.role === UserRole.ADMIN && requiredRoles.includes(UserRole.MEMBER)) {
+    if ((user.role === UserRole.ADMIN || user.role === 'admin') && 
+        requiredRoles.some(role => String(role) === UserRole.MEMBER)) {
       return true;
     }
 

@@ -7,7 +7,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../common/enums/user-role.enum';
+import { UserRole } from '../../common/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
