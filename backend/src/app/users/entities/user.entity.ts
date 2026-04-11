@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDa
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Tenant } from '../../tenants/entities/tenant.entity';
+import { UserRole } from '../../../common/enums/user-role.enum';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -18,8 +19,13 @@ export class User extends BaseEntity {
   @Column({ name: 'users_password' })
   password: string;
 
-  @Column({ default: 'member', name: 'users_role' })
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.MEMBER,
+    name: 'users_role'
+  })
+  role: UserRole;
 
   @Column({ name: 'users_tenant_id', nullable: true, type: 'uuid' })
   tenantId: string;

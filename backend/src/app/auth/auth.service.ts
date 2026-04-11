@@ -7,6 +7,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { User } from '../users/entities/user.entity';
+import { UserRole } from '../common/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
         email: registerDto.email,
         name: registerDto.name,
         password: hashedPassword,
-        role: 'super_admin',
+        role: UserRole.SUPER_ADMIN,
       });
 
       return {
@@ -53,7 +54,7 @@ export class AuthService {
       email: registerDto.email,
       name: registerDto.name,
       password: hashedPassword,
-      role: 'admin', // Admin di level tenant
+      role: UserRole.ADMIN, // Admin di level tenant
       tenant: tenant as any,
     });
 

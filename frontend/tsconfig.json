@@ -4,11 +4,14 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "src/types/.d.ts",
+    "src/types/**/*.d.ts",
     "typed-router.d.ts"
   ],
   "compilerOptions": {
     "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
