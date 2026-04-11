@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { router } from '@/router';
 import AuthService, { type LoginPayload, type AuthResponse } from '@/services/auth.service';
+import { useNotificationStore } from '@/stores/notification';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -42,14 +43,24 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('user', JSON.stringify(data.user));
     },
 
-    logout() {
-      this.token = null;
-      this.refreshToken = null;
-      this.user = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      router.push('/authentication/login');
+    async logout() {
+      const notificationStore = useNotificationStore();
+      try {
+        if (this.refreshToken) {
+          await AuthService.logout(this.refreshToken);
+        }
+      } catch (err) {
+        // Silently fail if backend logout fails
+      } finally {
+        this.token = null;
+        this.refreshToken = null;
+        this.user = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        router.push('/authentication/login');
+        notificationStore.showSuccess('Logged out successfully');
+      }
     },
 
     async checkAuth() {

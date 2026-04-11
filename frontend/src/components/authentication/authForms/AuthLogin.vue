@@ -38,9 +38,6 @@ async function handleSubmit() {
     </v-col>
   </v-row>
   <h5 class="text-center my-4 mb-8">Sign in with Email address</h5>
-  <v-alert v-if="authStore.error" type="error" variant="tonal" class="mb-4">
-    {{ authStore.error }}
-  </v-alert>
   <form @submit.prevent="handleSubmit" class="mt-7 loginForm">
     <v-text-field 
       v-model="email"
@@ -72,7 +69,7 @@ async function handleSubmit() {
         hide-details
       ></v-checkbox>
       <div class="ml-auto">
-        <a href="javascript:void(0)" class="text-primary text-decoration-none">Forgot password?</a>
+        <router-link to="/authentication/forgot-password" class="text-primary text-decoration-none font-weight-medium">Forgot password?</router-link>
       </div>
     </div>
     <v-btn 

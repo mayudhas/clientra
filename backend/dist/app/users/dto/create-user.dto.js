@@ -18,6 +18,7 @@ class CreateUserDto {
     password;
     role;
     tenantId;
+    isActive;
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
@@ -44,4 +45,9 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "tenantId", void 0);
+__decorate([
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], CreateUserDto.prototype, "isActive", void 0);
 //# sourceMappingURL=create-user.dto.js.map

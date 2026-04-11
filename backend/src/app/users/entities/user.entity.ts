@@ -1,8 +1,9 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Tenant } from '../../tenants/entities/tenant.entity';
 import { UserRole } from '../../../common/enums/user-role.enum';
+import { RefreshToken } from '../../auth/entities/refresh-token.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -30,6 +31,9 @@ export class User extends BaseEntity {
   @Column({ name: 'users_tenant_id', nullable: true, type: 'uuid' })
   tenantId: string;
 
+  @Column({ name: 'users_is_active', default: true })
+  isActive: boolean;
+
   @CreateDateColumn({ name: 'users_created_at' })
   declare createdAt: Date;
 
@@ -39,4 +43,7 @@ export class User extends BaseEntity {
   @ManyToOne(() => Tenant, (tenant) => tenant.users)
   @JoinColumn({ name: 'users_tenant_id' })
   tenant: Tenant;
+
+  @OneToMany(() => RefreshToken, (token) => token.user)
+  refreshTokens: RefreshToken[];
 }

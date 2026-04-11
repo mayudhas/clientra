@@ -5,4 +5,5 @@ export declare class CreateUserDto {
     password: string;
     role?: UserRole;
     tenantId?: string;
+    isActive?: boolean;
 }
