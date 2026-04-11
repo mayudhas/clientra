@@ -21,6 +21,7 @@ const AuthService = {
   login: (payload: LoginPayload) => api.post<AuthResponse>('/auth/login', payload),
   register: (payload: any) => api.post('/auth/register', payload),
   refresh: (refreshToken: string) => api.post<AuthResponse>('/auth/refresh', { refreshToken }),
+  logout: (refreshToken: string) => api.post('/auth/logout', { refreshToken }),
 };
 
 export default AuthService;

@@ -15,13 +15,16 @@ const class_transformer_1 = require("class-transformer");
 const base_entity_1 = require("../../../common/entities/base.entity");
 const tenant_entity_1 = require("../../tenants/entities/tenant.entity");
 const user_role_enum_1 = require("../../../common/enums/user-role.enum");
+const refresh_token_entity_1 = require("../../auth/entities/refresh-token.entity");
 let User = class User extends base_entity_1.BaseEntity {
     name;
     email;
     password;
     role;
     tenantId;
+    isActive;
     tenant;
+    refreshTokens;
 };
 exports.User = User;
 __decorate([
@@ -55,6 +58,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "tenantId", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'users_is_active', default: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isActive", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'users_created_at' }),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
@@ -67,6 +74,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'users_tenant_id' }),
     __metadata("design:type", tenant_entity_1.Tenant)
 ], User.prototype, "tenant", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => refresh_token_entity_1.RefreshToken, (token) => token.user),
+    __metadata("design:type", Array)
+], User.prototype, "refreshTokens", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

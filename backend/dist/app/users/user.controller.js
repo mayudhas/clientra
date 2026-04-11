@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
+const update_profile_dto_1 = require("./dto/update-profile.dto");
+const change_password_dto_1 = require("./dto/change-password.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../../common/guards/roles.guard");
 const user_role_enum_1 = require("../../common/enums/user-role.enum");
@@ -32,13 +34,37 @@ let UserController = class UserController {
             createUserDto.tenantId = user.tenantId;
             createUserDto.role = user_role_enum_1.UserRole.MEMBER;
         }
+        else if (createUserDto.tenantId === '') {
+            createUserDto.tenantId = null;
+        }
         return await this.userService.create(createUserDto);
     }
-    async findAll(user) {
-        if (user.role === user_role_enum_1.UserRole.SUPER_ADMIN) {
-            return await this.userService.findAll();
+    async getProfile(user) {
+        return await this.userService.findById(user.userId);
+    }
+    async updateProfile(updateProfileDto, user) {
+        return await this.userService.update(user.userId, updateProfileDto);
+    }
+    async changePassword(changePasswordDto, user) {
+        try {
+            await this.userService.changePassword(user.userId, changePasswordDto.currentPassword, changePasswordDto.newPassword);
+            return { message: 'Password changed successfully' };
         }
-        return await this.userService.findAll({ where: { tenantId: user.tenantId } });
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async findAll(user, page, limit, search, isActive) {
+        const filter = {
+            page: page ? parseInt(page, 10) : 1,
+            limit: limit ? parseInt(limit, 10) : 10,
+            search,
+            tenantId: user.role === user_role_enum_1.UserRole.SUPER_ADMIN ? undefined : user.tenantId
+        };
+        if (isActive !== undefined && isActive !== '') {
+            filter.isActive = isActive === 'true';
+        }
+        return await this.userService.findWithPagination(filter);
     }
     async findOne(id, user) {
         const targetUser = await this.userService.findById(id);
@@ -53,7 +79,18 @@ let UserController = class UserController {
     }
     async update(id, updateUserDto, user) {
         const targetUser = await this.userService.findById(id);
+        if (!targetUser) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        if (user.role !== user_role_enum_1.UserRole.SUPER_ADMIN && targetUser.role === user_role_enum_1.UserRole.SUPER_ADMIN) {
+            if (updateUserDto.isActive === false) {
+                throw new common_1.ForbiddenException('Ordinary admins cannot deactivate super admins');
+            }
+        }
         if (user.role === user_role_enum_1.UserRole.SUPER_ADMIN) {
+            if (updateUserDto.tenantId === '') {
+                updateUserDto.tenantId = null;
+            }
             return await this.userService.update(id, updateUserDto);
         }
         if (user.userId !== id) {
@@ -64,13 +101,22 @@ let UserController = class UserController {
         if (user.role === user_role_enum_1.UserRole.MEMBER) {
             delete updateUserDto.role;
         }
+        if (updateUserDto.tenantId === '') {
+            updateUserDto.tenantId = null;
+        }
         return await this.userService.update(id, updateUserDto);
     }
     async remove(id, user) {
+        if (user.userId === id) {
+            throw new common_1.ForbiddenException('You cannot delete your own account');
+        }
         const targetUser = await this.userService.findById(id);
         if (user.role !== user_role_enum_1.UserRole.SUPER_ADMIN) {
             if (targetUser?.tenantId !== user.tenantId) {
                 throw new common_1.ForbiddenException('You are not allowed to delete this user');
+            }
+            if (targetUser?.role === user_role_enum_1.UserRole.SUPER_ADMIN) {
+                throw new common_1.ForbiddenException('Ordinary admins cannot delete super admins');
             }
         }
         await this.userService.delete(id);
@@ -88,11 +134,38 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)(),
-    (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ADMIN),
+    (0, common_1.Get)('profile'),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.Put)('profile'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_profile_dto_1.UpdateProfileDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "updateProfile", null);
+__decorate([
+    (0, common_1.Post)('change-password'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [change_password_dto_1.ChangePasswordDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Get)(),
+    (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ADMIN),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
+    __param(3, (0, common_1.Query)('search')),
+    __param(4, (0, common_1.Query)('isActive')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "findAll", null);
 __decorate([

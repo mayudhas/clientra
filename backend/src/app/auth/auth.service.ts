@@ -1,13 +1,22 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ForbiddenException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UserService } from '../users/user.service';
 import { TenantService } from '../tenants/tenant.service';
+import { MailService } from '../../common/mail/mail.service';
+import { PasswordReset } from './entities/password-reset.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { LogoutDto } from './dto/logout.dto';
+import { RefreshToken } from './entities/refresh-token.entity';
 import { User } from '../users/entities/user.entity';
-import { UserRole } from '../common/enums/user-role.enum';
+import { UserRole } from '../../common/enums/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +24,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly tenantService: TenantService,
+    private readonly mailService: MailService,
+    @InjectRepository(PasswordReset)
+    private readonly passwordResetRepository: Repository<PasswordReset>,
+    @InjectRepository(RefreshToken)
+    private readonly refreshTokenRepository: Repository<RefreshToken>,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -74,6 +88,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!userDetail.isActive) {
+      throw new UnauthorizedException('User account has been deactivated');
+    }
+
     // 2. Bandingkan Password
     const passwordValid = await bcrypt.compare(loginDto.password, userDetail.password);
     if (!passwordValid) {
@@ -86,20 +104,111 @@ export class AuthService {
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     try {
-      // Validasi token yang dilempar
       const payload = this.jwtService.verify(refreshTokenDto.refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET || 'super-refresh-secret',
       });
+
+      // Check database for token and revocation status
+      const storedToken = await this.refreshTokenRepository.findOne({
+        where: { 
+          token: refreshTokenDto.refreshToken,
+          userId: payload.sub,
+          isRevoked: false 
+        }
+      });
+
+      if (!storedToken || storedToken.expiresAt < new Date()) {
+        if (storedToken) {
+          await this.refreshTokenRepository.delete(storedToken.id);
+        }
+        throw new UnauthorizedException('Invalid or expired refresh token');
+      }
 
       const user = await this.userService.findById(payload.sub);
       if (!user) {
         throw new UnauthorizedException('User no longer exists.');
       }
 
+      // Revoke the old token after successful refresh (Rotation)
+      await this.refreshTokenRepository.update(storedToken.id, { isRevoked: true });
+
       return this.generateTokens(user);
     } catch (error) {
+      if (error instanceof UnauthorizedException) throw error;
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
+  }
+
+  async logout(userId: string, logoutDto: LogoutDto) {
+    const { refreshToken } = logoutDto;
+    
+    // Mark the specific refresh token as revoked
+    await this.refreshTokenRepository.update(
+      { token: refreshToken, userId },
+      { isRevoked: true }
+    );
+
+    return {
+      message: 'Logged out successfully',
+    };
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const user = await this.userService.findByEmail(forgotPasswordDto.email);
+    
+    // For security reasons, we should not reveal if the email exists or not
+    // But since this is a private internal application, we can be more explicit
+    if (!user) {
+      throw new NotFoundException('User with this email does not exist');
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1); // 1 hour expiration
+
+    await this.passwordResetRepository.save({
+      email: user.email,
+      token: token,
+      expiresAt: expiresAt,
+    });
+
+    await this.mailService.sendPasswordResetEmail(user.email, token);
+
+    return {
+      message: 'Password reset link has been sent to your email',
+    };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { token, newPassword } = resetPasswordDto;
+
+    const resetRequest = await this.passwordResetRepository.findOne({
+      where: { token },
+    });
+
+    if (!resetRequest) {
+      throw new BadRequestException('Invalid or expired password reset token');
+    }
+
+    if (resetRequest.expiresAt < new Date()) {
+      await this.passwordResetRepository.delete(resetRequest.id);
+      throw new BadRequestException('Password reset token has expired');
+    }
+
+    const user = await this.userService.findByEmail(resetRequest.email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Update user password - UserService.update handles hashing
+    await this.userService.update(user.id, { password: newPassword });
+
+    // Clean up reset token
+    await this.passwordResetRepository.delete(resetRequest.id);
+
+    return {
+      message: 'Password has been successfully updated',
+    };
   }
 
   private async generateTokens(user: User) {
@@ -119,6 +228,16 @@ export class AuthService {
     const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET || 'super-refresh-secret',
       expiresIn: '7d', // Refresh token umur 7 hari
+    });
+
+    // Save refresh token to database
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+    
+    await this.refreshTokenRepository.save({
+      token: refreshToken,
+      userId: user.id,
+      expiresAt,
     });
 
     return {

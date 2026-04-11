@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
+import { computed } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
+import { useAuthStore } from '../../../stores/auth';
 import sidebarItems from './sidebarItem';
 
 import NavGroup from './NavGroup/NavGroup.vue';
@@ -10,7 +11,14 @@ import ExtraBox from './extrabox/ExtraBox.vue';
 import Logo from '../logo/LogoMain.vue';
 
 const customizer = useCustomizerStore();
-const sidebarMenu = shallowRef(sidebarItems);
+const authStore = useAuthStore();
+
+const sidebarMenu = computed(() => {
+  return sidebarItems.filter((item) => {
+    if (!item.roles) return true;
+    return item.roles.includes(authStore.user?.role);
+  });
+});
 
 // Assign the version to a variable
 const appVersion = import.meta.env.VITE_APP_VERSION;

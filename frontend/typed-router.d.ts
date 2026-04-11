@@ -35,8 +35,11 @@ declare module 'vue-router/auto-routes' {
       | '/(main)/crm/invoices'
       | '/(main)/crm/projects'
       | '/(main)/dashboard/default'
+      | '/(main)/management/components/ChangePasswordDialog'
+      | '/(main)/management/components/UserFormDialog'
       | '/(main)/management/tenants'
       | '/(main)/management/users'
+      | '/(main)/profile'
       | '/(main)/settings'
     >,
     '/(main)/crm/clients': RouteRecordInfo<
@@ -67,6 +70,20 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/(main)/management/components/ChangePasswordDialog': RouteRecordInfo<
+      '/(main)/management/components/ChangePasswordDialog',
+      '/management/components/ChangePasswordDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/management/components/UserFormDialog': RouteRecordInfo<
+      '/(main)/management/components/UserFormDialog',
+      '/management/components/UserFormDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/(main)/management/tenants': RouteRecordInfo<
       '/(main)/management/tenants',
       '/management/tenants',
@@ -81,9 +98,23 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/(main)/profile': RouteRecordInfo<
+      '/(main)/profile',
+      '/profile',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/(main)/settings': RouteRecordInfo<
       '/(main)/settings',
       '/settings',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/authentication/forgot-password': RouteRecordInfo<
+      '/authentication/forgot-password',
+      '/authentication/forgot-password',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -98,6 +129,13 @@ declare module 'vue-router/auto-routes' {
     '/authentication/register': RouteRecordInfo<
       '/authentication/register',
       '/authentication/register',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/authentication/reset-password': RouteRecordInfo<
+      '/authentication/reset-password',
+      '/authentication/reset-password',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -129,8 +167,11 @@ declare module 'vue-router/auto-routes' {
         | '/(main)/crm/invoices'
         | '/(main)/crm/projects'
         | '/(main)/dashboard/default'
+        | '/(main)/management/components/ChangePasswordDialog'
+        | '/(main)/management/components/UserFormDialog'
         | '/(main)/management/tenants'
         | '/(main)/management/users'
+        | '/(main)/profile'
         | '/(main)/settings'
       views:
         | 'default'
@@ -159,6 +200,18 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/(main)/management/components/ChangePasswordDialog.vue': {
+      routes:
+        | '/(main)/management/components/ChangePasswordDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/management/components/UserFormDialog.vue': {
+      routes:
+        | '/(main)/management/components/UserFormDialog'
+      views:
+        | never
+    }
     'src/pages/(main)/management/tenants.vue': {
       routes:
         | '/(main)/management/tenants'
@@ -171,9 +224,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/(main)/profile.vue': {
+      routes:
+        | '/(main)/profile'
+      views:
+        | never
+    }
     'src/pages/(main)/settings.vue': {
       routes:
         | '/(main)/settings'
+      views:
+        | never
+    }
+    'src/pages/authentication/forgot-password.vue': {
+      routes:
+        | '/authentication/forgot-password'
       views:
         | never
     }
@@ -186,6 +251,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/authentication/register.vue': {
       routes:
         | '/authentication/register'
+      views:
+        | never
+    }
+    'src/pages/authentication/reset-password.vue': {
+      routes:
+        | '/authentication/reset-password'
       views:
         | never
     }

@@ -30,7 +30,10 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
     async validate(payload) {
         const user = await this.userService.findById(payload.sub);
         if (!user) {
-            throw new common_1.UnauthorizedException('User not found or inactive');
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        if (!user.isActive) {
+            throw new common_1.UnauthorizedException('User account has been deactivated');
         }
         return {
             userId: payload.sub,

@@ -11,11 +11,15 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
 const config_1 = require("@nestjs/config");
+const typeorm_1 = require("@nestjs/typeorm");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
 const users_module_1 = require("../users/users.module");
 const tenants_module_1 = require("../tenants/tenants.module");
+const mail_module_1 = require("../../common/mail/mail.module");
+const password_reset_entity_1 = require("./entities/password-reset.entity");
+const refresh_token_entity_1 = require("./entities/refresh-token.entity");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -24,6 +28,8 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             users_module_1.UsersModule,
             tenants_module_1.TenantsModule,
+            mail_module_1.MailModule,
+            typeorm_1.TypeOrmModule.forFeature([password_reset_entity_1.PasswordReset, refresh_token_entity_1.RefreshToken]),
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],

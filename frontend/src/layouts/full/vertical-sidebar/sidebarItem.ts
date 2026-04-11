@@ -22,6 +22,7 @@ export interface menu {
   disabled?: boolean;
   type?: string;
   subCaption?: string;
+  roles?: string[];
 }
 
 const sidebarItem: menu[] = [
@@ -53,17 +54,19 @@ const sidebarItem: menu[] = [
   },
 
   // ─── MANAGEMENT ──────────────────────────────────
-  { divider: true },
-  { header: 'Management' },
+  { divider: true, roles: ['super_admin', 'admin'] },
+  { header: 'Management', roles: ['super_admin', 'admin'] },
   {
     title: 'Users',
     icon: UserCircleIcon,
-    to: '/management/users'
+    to: '/management/users',
+    roles: ['super_admin', 'admin']
   },
   {
     title: 'Tenants',
     icon: BuildingIcon,
-    to: '/management/tenants'
+    to: '/management/tenants',
+    roles: ['super_admin']
   },
 
   // ─── SETTINGS ────────────────────────────────────

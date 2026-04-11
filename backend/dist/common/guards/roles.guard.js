@@ -31,13 +31,15 @@ let RolesGuard = class RolesGuard {
         if (!user || !user.role) {
             return false;
         }
-        if (user.role === user_role_enum_1.UserRole.SUPER_ADMIN) {
+        if (user.role === user_role_enum_1.UserRole.SUPER_ADMIN || user.role === 'super_admin') {
             return true;
         }
-        if (requiredRoles.includes(user.role)) {
+        const hasRole = requiredRoles.some(role => String(role) === String(user.role));
+        if (hasRole) {
             return true;
         }
-        if (user.role === user_role_enum_1.UserRole.ADMIN && requiredRoles.includes(user_role_enum_1.UserRole.MEMBER)) {
+        if ((user.role === user_role_enum_1.UserRole.ADMIN || user.role === 'admin') &&
+            requiredRoles.some(role => String(role) === user_role_enum_1.UserRole.MEMBER)) {
             return true;
         }
         return false;
