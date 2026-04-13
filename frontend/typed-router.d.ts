@@ -36,6 +36,8 @@ declare module 'vue-router/auto-routes' {
       | '/(main)/crm/projects'
       | '/(main)/dashboard/default'
       | '/(main)/management/components/ChangePasswordDialog'
+      | '/(main)/management/components/DeleteTenantDialog'
+      | '/(main)/management/components/TenantFormDialog'
       | '/(main)/management/components/UserFormDialog'
       | '/(main)/management/tenants'
       | '/(main)/management/users'
@@ -73,6 +75,20 @@ declare module 'vue-router/auto-routes' {
     '/(main)/management/components/ChangePasswordDialog': RouteRecordInfo<
       '/(main)/management/components/ChangePasswordDialog',
       '/management/components/ChangePasswordDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/management/components/DeleteTenantDialog': RouteRecordInfo<
+      '/(main)/management/components/DeleteTenantDialog',
+      '/management/components/DeleteTenantDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/management/components/TenantFormDialog': RouteRecordInfo<
+      '/(main)/management/components/TenantFormDialog',
+      '/management/components/TenantFormDialog',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -168,6 +184,8 @@ declare module 'vue-router/auto-routes' {
         | '/(main)/crm/projects'
         | '/(main)/dashboard/default'
         | '/(main)/management/components/ChangePasswordDialog'
+        | '/(main)/management/components/DeleteTenantDialog'
+        | '/(main)/management/components/TenantFormDialog'
         | '/(main)/management/components/UserFormDialog'
         | '/(main)/management/tenants'
         | '/(main)/management/users'
@@ -203,6 +221,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/(main)/management/components/ChangePasswordDialog.vue': {
       routes:
         | '/(main)/management/components/ChangePasswordDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/management/components/DeleteTenantDialog.vue': {
+      routes:
+        | '/(main)/management/components/DeleteTenantDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/management/components/TenantFormDialog.vue': {
+      routes:
+        | '/(main)/management/components/TenantFormDialog'
       views:
         | never
     }
