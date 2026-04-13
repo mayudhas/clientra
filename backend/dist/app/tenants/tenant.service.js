@@ -19,6 +19,54 @@ let TenantService = class TenantService extends core_service_1.CoreService {
         super(tenantRepository);
         this.tenantRepository = tenantRepository;
     }
+    async findWithPagination(filter) {
+        const { page = 1, limit = 10, search } = filter;
+        const queryBuilder = this.tenantRepository.repository.createQueryBuilder('tenant');
+        if (search) {
+            queryBuilder.where('tenant.name ILIKE :search', { search: `%${search}%` });
+        }
+        queryBuilder.skip((Number(page) - 1) * Number(limit));
+        queryBuilder.take(Number(limit));
+        queryBuilder.orderBy('tenant.createdAt', 'DESC');
+        const [items, total] = await queryBuilder.getManyAndCount();
+        const itemsWithStats = await Promise.all(items.map(async (tenant) => {
+            const stats = await this.getTenantStats(tenant.id);
+            return {
+                ...tenant,
+                userCount: stats?.users || 0,
+                clientCount: stats?.clients || 0
+            };
+        }));
+        return {
+            data: itemsWithStats,
+            meta: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                totalPages: Math.ceil(total / Number(limit))
+            }
+        };
+    }
+    async getTenantStats(id) {
+        const tenant = await this.tenantRepository.findById(id, {
+            relations: ['users', 'clients', 'projects', 'invoices']
+        });
+        if (!tenant)
+            return null;
+        return {
+            users: tenant.users?.length || 0,
+            clients: tenant.clients?.length || 0,
+            projects: tenant.projects?.length || 0,
+            invoices: tenant.invoices?.length || 0,
+        };
+    }
+    async delete(id) {
+        const stats = await this.getTenantStats(id);
+        if (stats && stats.users > 0) {
+            throw new common_1.BadRequestException('Cannot delete tenant with active users. Please remove or migrate users first.');
+        }
+        return super.delete(id);
+    }
 };
 exports.TenantService = TenantService;
 exports.TenantService = TenantService = __decorate([

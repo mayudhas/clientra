@@ -58,7 +58,8 @@ let UserService = class UserService extends core_service_1.CoreService {
     }
     async findWithPagination(filter) {
         const { page = 1, limit = 10, search, tenantId } = filter;
-        const queryBuilder = this.userRepository.repository.createQueryBuilder('user');
+        const queryBuilder = this.userRepository.repository.createQueryBuilder('user')
+            .leftJoinAndSelect('user.tenant', 'tenant');
         if (filter.isActive !== undefined) {
             queryBuilder.where('user.isActive = :isActive', { isActive: filter.isActive });
         }
