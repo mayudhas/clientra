@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum, IsUUID } from 'class-validator';
 
 export class CreateClientDto {
   @IsString()
@@ -29,4 +29,9 @@ export class CreateClientDto {
   @IsOptional()
   @IsEnum(['active', 'inactive'])
   status?: string;
+
+  @IsString()
+  @IsUUID()
+  @IsOptional()
+  tenantId?: string;
 }
