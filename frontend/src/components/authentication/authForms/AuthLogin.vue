@@ -61,9 +61,7 @@ async function handleSubmit() {
     <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
       <v-checkbox
         v-model="checkbox"
-        :rules="[(v: any) => !!v || 'You must agree to continue!']"
         label="Remember me?"
-        required
         color="primary"
         class="ms-n2"
         hide-details
