@@ -32,6 +32,8 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       Record<never, never>,
       | '/(main)/crm/clients'
+      | '/(main)/crm/components/ClientFormDialog'
+      | '/(main)/crm/components/DeleteClientDialog'
       | '/(main)/crm/invoices'
       | '/(main)/crm/projects'
       | '/(main)/dashboard/default'
@@ -47,6 +49,20 @@ declare module 'vue-router/auto-routes' {
     '/(main)/crm/clients': RouteRecordInfo<
       '/(main)/crm/clients',
       '/crm/clients',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/components/ClientFormDialog': RouteRecordInfo<
+      '/(main)/crm/components/ClientFormDialog',
+      '/crm/components/ClientFormDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/components/DeleteClientDialog': RouteRecordInfo<
+      '/(main)/crm/components/DeleteClientDialog',
+      '/crm/components/DeleteClientDialog',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -180,6 +196,8 @@ declare module 'vue-router/auto-routes' {
       routes:
         | '/(main)'
         | '/(main)/crm/clients'
+        | '/(main)/crm/components/ClientFormDialog'
+        | '/(main)/crm/components/DeleteClientDialog'
         | '/(main)/crm/invoices'
         | '/(main)/crm/projects'
         | '/(main)/dashboard/default'
@@ -197,6 +215,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/(main)/crm/clients.vue': {
       routes:
         | '/(main)/crm/clients'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/components/ClientFormDialog.vue': {
+      routes:
+        | '/(main)/crm/components/ClientFormDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/components/DeleteClientDialog.vue': {
+      routes:
+        | '/(main)/crm/components/DeleteClientDialog'
       views:
         | never
     }

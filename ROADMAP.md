@@ -57,15 +57,17 @@
 
 ---
 
-### FASE 1: CLIENT — HUBUNGKAN FRONTEND KE BACKEND
-> **Status**: Backend sudah selesai, frontend masih data dummy
-> **Goal**: Frontend mengambil data dari API backend secara real
-> **Estimasi**: ~30 menit
+### ─── 🟢 FASE 1: CLIENT — HUBUNGKAN FRONTEND KE BACKEND [x] ─────────────────
+- [x] 1.1: Buat `client.service.ts` untuk komunikasi API di frontend.
+- [x] 1.2: Buat Pinia store `stores/clients.ts` untuk manajemen state client.
+- [x] 1.3: Integrasikan API ke `clients.vue` (List, Search, Pagination).
+- [x] 1.4: Implementasikan `ClientFormDialog.vue` (Create & Update).
+- [x] 1.5: Implementasikan `DeleteClientDialog.vue` (Delete Confirmation).
+- [x] 1.6: Integrasikan Super Admin tenant selection logic.
 
-**Kenapa pertama?** Client adalah pondasi. Project dan Invoice bergantung pada Client.
+---
 
-#### File yang Dibuat:
-
+## ─── 🟡 FASE 2: PROJECT — BACKEND CRUD [ ] ──────────────────────────────
 | # | File | Tipe | Keterangan |
 |---|------|------|------------|
 | 1.1 | `frontend/src/services/client.service.ts` | **BARU** | API service untuk CRUD client |
@@ -124,7 +126,7 @@
 
 ---
 
-### FASE 2: PROJECT — BACKEND CRUD
+### FASE 2: PROJECT — BACKEND CRUD [x] ──────────────────────────────
 > **Status**: Hanya ada Entity dan Module kosong
 > **Goal**: API CRUD untuk Project yang lengkap
 > **Estimasi**: ~30 menit
