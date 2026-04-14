@@ -30,16 +30,7 @@ export class ProjectsController {
       throw new BadRequestException('Action denied: You must be associated with a tenant to manage projects.');
     }
     
-    // For super admin without tenantId, they should probably select a tenant, 
-    // but typically projects are created by tenant users.
-    // If super admin creates, they need to provide tenantId or we use their tenantId if they have one.
-    const finalTenantId = tenantId || (isSuperAdmin ? createProjectDto['tenantId'] : null);
-    
-    if (!finalTenantId) {
-       throw new BadRequestException('Tenant ID is required');
-    }
-
-    return this.projectsService.createProject(createProjectDto, finalTenantId);
+    return this.projectsService.createProject(createProjectDto, tenantId);
   }
 
   @Get()

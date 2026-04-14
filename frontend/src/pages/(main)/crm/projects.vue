@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useProjectsStore } from '@/stores/projects';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
+import ProjectFormDialog from './components/ProjectFormDialog.vue';
+import DeleteProjectDialog from './components/DeleteProjectDialog.vue';
+import { PlusIcon, PencilIcon, TrashIcon, SearchIcon, DotsVerticalIcon } from 'vue-tabler-icons';
 
 const page = ref({ title: 'Projects' });
 const breadcrumbs = ref([
@@ -9,76 +13,200 @@ const breadcrumbs = ref([
   { title: 'Projects', disabled: true, href: '#' }
 ]);
 
+const projectsStore = useProjectsStore();
 const search = ref('');
+
+// Dialog states
+const showFormDialog = ref(false);
+const showDeleteDialog = ref(false);
+const editMode = ref(false);
+const selectedProject = ref<any>(null);
 
 const headers = [
   { title: 'Project Name', key: 'name' },
-  { title: 'Client', key: 'client' },
+  { title: 'Client', key: 'client.name' },
   { title: 'Status', key: 'status' },
-  { title: 'Deadline', key: 'deadline' },
+  { title: 'Priority', key: 'priority' },
+  { title: 'Deadline', key: 'endDate' },
   { title: 'Progress', key: 'progress' },
-  { title: 'Actions', key: 'actions', sortable: false }
+  { title: 'Actions', key: 'actions', sortable: false, align: 'end' }
 ];
 
-const items = ref([
-  { name: 'Website Redesign', client: 'PT Maju Jaya', status: 'In Progress', deadline: '2026-05-15', progress: 65 },
-  { name: 'Mobile App Development', client: 'CV Berkah Sentosa', status: 'In Progress', deadline: '2026-06-30', progress: 30 },
-  { name: 'ERP Implementation', client: 'Global Tech Indonesia', status: 'On Hold', deadline: '2026-08-01', progress: 15 },
-  { name: 'Brand Identity Package', client: 'Nusantara Digital', status: 'Completed', deadline: '2026-03-20', progress: 100 },
-  { name: 'SEO Optimization', client: 'Toko Sejahtera', status: 'In Progress', deadline: '2026-04-30', progress: 80 },
-]);
+const projects = computed(() => projectsStore.projects);
+const loading = computed(() => projectsStore.loading);
+
+onMounted(() => {
+  projectsStore.fetchProjects();
+});
 
 function getStatusColor(status: string) {
   const colors: Record<string, string> = {
-    'In Progress': 'info',
-    'Completed': 'success',
-    'On Hold': 'warning',
-    'Cancelled': 'error'
+    'planning': 'secondary',
+    'in_progress': 'info',
+    'on_hold': 'warning',
+    'completed': 'success',
+    'cancelled': 'error'
   };
   return colors[status] || 'default';
+}
+
+function getPriorityColor(priority: string) {
+  const colors: Record<string, string> = {
+    'low': 'success',
+    'medium': 'info',
+    'high': 'warning',
+    'urgent': 'error'
+  };
+  return colors[priority] || 'default';
+}
+
+function formatStatus(status: string) {
+  return status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+function openCreate() {
+  editMode.value = false;
+  selectedProject.value = null;
+  showFormDialog.value = true;
+}
+
+function openEdit(item: any) {
+  editMode.value = true;
+  selectedProject.value = item;
+  showFormDialog.value = true;
+}
+
+function confirmDelete(item: any) {
+  selectedProject.value = item;
+  showDeleteDialog.value = true;
+}
+
+function formatCurrency(value?: number) {
+  if (value === undefined || value === null) return '-';
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  }).format(value);
 }
 </script>
 
 <template>
   <BaseBreadcrumb :title="page.title" :breadcrumbs="breadcrumbs" />
   <UiParentCard title="Project List">
-    <v-row class="mb-4">
+    <v-row class="mb-4 align-center">
       <v-col cols="12" md="6">
         <v-text-field
           v-model="search"
           variant="outlined"
-          prepend-inner-icon="mdi-magnify"
           label="Search Projects..."
           hide-details
           density="compact"
-        />
+          color="primary"
+        >
+          <template v-slot:prepend-inner>
+            <SearchIcon size="18" class="text-medium-emphasis" />
+          </template>
+        </v-text-field>
       </v-col>
       <v-col cols="12" md="6" class="text-md-right">
-        <v-btn color="primary">
-          <v-icon start>mdi-plus</v-icon> Add Project
+        <v-btn color="primary" @click="openCreate" prepend-icon="mdi-plus">
+          Add Project
         </v-btn>
       </v-col>
     </v-row>
 
-    <v-data-table :headers="headers" :items="items" :search="search" class="elevation-0">
+    <v-data-table 
+      :headers="headers" 
+      :items="projects" 
+      :search="search" 
+      :loading="loading"
+      class="border rounded-md elevation-0"
+    >
+      <!-- Project Name & Description -->
+      <template v-slot:item.name="{ item }">
+        <div class="d-flex flex-column">
+          <span class="text-subtitle-1 font-weight-semibold">{{ item.name }}</span>
+          <span class="text-caption text-medium-emphasis text-truncate" style="max-width: 200px">
+            {{ formatCurrency(item.budget) }}
+          </span>
+        </div>
+      </template>
+
+      <!-- Status -->
       <template v-slot:item.status="{ item }">
-        <v-chip :color="getStatusColor(item.status)" size="small" variant="tonal">
-          {{ item.status }}
+        <v-chip :color="getStatusColor(item.status)" size="small" variant="tonal" class="text-capitalize">
+          {{ formatStatus(item.status) }}
         </v-chip>
       </template>
-      <template v-slot:item.progress="{ item }">
-        <v-progress-linear
-          :model-value="item.progress"
-          :color="item.progress === 100 ? 'success' : 'primary'"
-          height="8"
-          rounded
-        />
-        <span class="text-caption text-medium-emphasis">{{ item.progress }}%</span>
+
+      <!-- Priority -->
+      <template v-slot:item.priority="{ item }">
+        <v-chip :color="getPriorityColor(item.priority)" size="x-small" variant="flat" class="text-capitalize">
+          {{ item.priority }}
+        </v-chip>
       </template>
+
+      <!-- Deadline -->
+      <template v-slot:item.endDate="{ item }">
+        <span class="text-body-2">{{ item.endDate || '-' }}</span>
+      </template>
+
+      <!-- Progress -->
+      <template v-slot:item.progress="{ item }">
+        <div class="d-flex align-center" style="min-width: 120px">
+          <v-progress-linear
+            :model-value="item.progress"
+            :color="item.progress === 100 ? 'success' : 'primary'"
+            height="6"
+            rounded
+            class="mr-2"
+          />
+          <span class="text-caption font-weight-bold">{{ item.progress }}%</span>
+        </div>
+      </template>
+
+      <!-- Actions -->
       <template v-slot:item.actions="{ item }">
-        <v-btn icon size="small" variant="text" color="primary"><v-icon>mdi-pencil</v-icon></v-btn>
-        <v-btn icon size="small" variant="text" color="error"><v-icon>mdi-delete</v-icon></v-btn>
+        <div class="d-flex justify-end gap-2">
+          <v-btn icon size="small" variant="text" color="primary" @click="openEdit(item)">
+            <PencilIcon size="18" />
+          </v-btn>
+          <v-btn icon size="small" variant="text" color="error" @click="confirmDelete(item)">
+            <TrashIcon size="18" />
+          </v-btn>
+        </div>
+      </template>
+
+      <!-- Empty State -->
+      <template v-slot:no-data>
+        <div class="pa-8 text-center">
+          <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-briefcase-variant-outline</v-icon>
+          <h3 class="text-h6 text-medium-emphasis">No projects found</h3>
+          <p class="text-body-2 text-disabled mb-4">Get started by creating your first project</p>
+          <v-btn color="primary" variant="tonal" @click="openCreate">Add Project</v-btn>
+        </div>
       </template>
     </v-data-table>
   </UiParentCard>
+
+  <!-- Dialogs -->
+  <ProjectFormDialog 
+    v-model:show="showFormDialog"
+    :edit-mode="editMode"
+    :project-data="selectedProject"
+    @saved="projectsStore.fetchProjects"
+  />
+
+  <DeleteProjectDialog
+    v-model:show="showDeleteDialog"
+    :project-data="selectedProject"
+    @deleted="projectsStore.fetchProjects"
+  />
 </template>
+
+<style scoped>
+.gap-2 {
+  gap: 8px;
+}
+</style>

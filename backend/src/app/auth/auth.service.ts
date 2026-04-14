@@ -38,16 +38,12 @@ export class AuthService {
       throw new BadRequestException('User with this email already exists.');
     }
 
-    // 2. Hash Password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(registerDto.password, salt);
-
-    // 3. Cek apakah ini pendaftaran Super Admin
+    // 2. Cek apakah ini pendaftaran Super Admin
     if (registerDto.setupKey === (process.env.SETUP_KEY || 'clientra_super_secret')) {
       const superAdminUser = await this.userService.create({
         email: registerDto.email,
         name: registerDto.name,
-        password: hashedPassword,
+        password: registerDto.password, // Raw password, UserService.create will hash it
         role: UserRole.SUPER_ADMIN,
       });
 
@@ -58,7 +54,7 @@ export class AuthService {
       };
     }
 
-    // 4. Jika bukan super admin, maka wajib ada tenantName
+    // 3. Jika bukan super admin, maka wajib ada tenantName
     if (!registerDto.tenantName) {
       throw new BadRequestException('tenantName is required for standard registration');
     }
@@ -67,7 +63,7 @@ export class AuthService {
     const user = await this.userService.create({
       email: registerDto.email,
       name: registerDto.name,
-      password: hashedPassword,
+      password: registerDto.password, // Raw password, UserService.create will hash it
       role: UserRole.ADMIN, // Admin di level tenant
       tenant: tenant as any,
     });

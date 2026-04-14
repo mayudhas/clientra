@@ -211,7 +211,7 @@ Endpoints:
 
 ---
 
-### FASE 3: PROJECT — FRONTEND UI
+### FASE 3: PROJECT — FRONTEND UI [x] ──────────────────────────────
 > **Status**: Halaman ada tapi data dummy
 > **Goal**: Frontend untuk CRUD Project terhubung ke API
 > **Estimasi**: ~30 menit

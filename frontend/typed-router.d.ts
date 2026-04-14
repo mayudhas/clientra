@@ -34,6 +34,8 @@ declare module 'vue-router/auto-routes' {
       | '/(main)/crm/clients'
       | '/(main)/crm/components/ClientFormDialog'
       | '/(main)/crm/components/DeleteClientDialog'
+      | '/(main)/crm/components/DeleteProjectDialog'
+      | '/(main)/crm/components/ProjectFormDialog'
       | '/(main)/crm/invoices'
       | '/(main)/crm/projects'
       | '/(main)/dashboard/default'
@@ -63,6 +65,20 @@ declare module 'vue-router/auto-routes' {
     '/(main)/crm/components/DeleteClientDialog': RouteRecordInfo<
       '/(main)/crm/components/DeleteClientDialog',
       '/crm/components/DeleteClientDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/components/DeleteProjectDialog': RouteRecordInfo<
+      '/(main)/crm/components/DeleteProjectDialog',
+      '/crm/components/DeleteProjectDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/components/ProjectFormDialog': RouteRecordInfo<
+      '/(main)/crm/components/ProjectFormDialog',
+      '/crm/components/ProjectFormDialog',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -198,6 +214,8 @@ declare module 'vue-router/auto-routes' {
         | '/(main)/crm/clients'
         | '/(main)/crm/components/ClientFormDialog'
         | '/(main)/crm/components/DeleteClientDialog'
+        | '/(main)/crm/components/DeleteProjectDialog'
+        | '/(main)/crm/components/ProjectFormDialog'
         | '/(main)/crm/invoices'
         | '/(main)/crm/projects'
         | '/(main)/dashboard/default'
@@ -227,6 +245,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/(main)/crm/components/DeleteClientDialog.vue': {
       routes:
         | '/(main)/crm/components/DeleteClientDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/components/DeleteProjectDialog.vue': {
+      routes:
+        | '/(main)/crm/components/DeleteProjectDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/components/ProjectFormDialog.vue': {
+      routes:
+        | '/(main)/crm/components/ProjectFormDialog'
       views:
         | never
     }

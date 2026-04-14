@@ -34,6 +34,20 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async register(payload: any) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await AuthService.register(payload);
+        return response.data;
+      } catch (err: any) {
+        this.error = err.response?.data?.message || err.message || 'Registration failed';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     setSession(data: AuthResponse) {
       this.token = data.accessToken;
       this.refreshToken = data.refreshToken;
