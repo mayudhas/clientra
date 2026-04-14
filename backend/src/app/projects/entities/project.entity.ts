@@ -11,6 +11,34 @@ export class Project extends BaseEntity {
   @Column({ name: 'projects_name' })
   name: string;
 
+  @Column({ name: 'projects_description', type: 'text', nullable: true })
+  description: string;
+
+  @Column({
+    name: 'projects_status',
+    type: 'enum',
+    enum: ['planning', 'in_progress', 'on_hold', 'completed', 'cancelled'],
+    default: 'planning',
+  })
+  status: string;
+
+  @Column({
+    name: 'projects_priority',
+    type: 'enum',
+    enum: ['low', 'medium', 'high', 'urgent'],
+    default: 'medium',
+  })
+  priority: string;
+
+  @Column({ name: 'projects_budget', type: 'decimal', precision: 15, scale: 2, nullable: true })
+  budget: number;
+
+  @Column({ name: 'projects_start_date', type: 'date', nullable: true })
+  startDate: Date;
+
+  @Column({ name: 'projects_end_date', type: 'date', nullable: true })
+  endDate: Date;
+
   @Column({ default: 0, name: 'projects_progress' })
   progress: number;
 
