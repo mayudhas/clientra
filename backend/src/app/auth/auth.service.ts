@@ -212,9 +212,17 @@ export class AuthService {
   }
 
   private async generateTokens(user: User) {
-    // Memilih tenant id dari entity jika di join (butuh query relations aslinya).
-    // Tapi untuk JWT payload kita coba ambil dari user parameter aja
-    const tenantIdField = user['tenant']?.id || user['users_tenant_id'] || null;
+    // Debug: Log the user object to see why tenantId might be missing
+    console.log('[AuthService] Generating tokens for user:', {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      tenantId: (user as any).tenantId,
+      tenant: (user as any).tenant?.id,
+      keys: Object.keys(user)
+    });
+
+    const tenantIdField = (user as any).tenantId || (user as any).tenant?.id || (user as any).users_tenant_id || null;
 
     const payload = {
       sub: user.id,
