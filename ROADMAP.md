@@ -252,7 +252,7 @@ Form fields:
 
 ---
 
-### FASE 4: PROJECT TASKS (FITUR BARU)
+### FASE 4: PROJECT TASKS (FITUR BARU) [x]
 > **Status**: Belum ada sama sekali
 > **Goal**: Sistem task/checklist di dalam project
 > **Estimasi**: ~45 menit

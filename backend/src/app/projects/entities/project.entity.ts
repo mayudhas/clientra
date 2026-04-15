@@ -1,7 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Tenant } from '../../tenants/entities/tenant.entity';
 import { Client } from '../../clients/entities/client.entity';
+import { Task } from './task.entity';
 
 @Entity('projects')
 export class Project extends BaseEntity {
@@ -61,4 +62,7 @@ export class Project extends BaseEntity {
   @ManyToOne(() => Tenant, (tenant) => tenant.projects)
   @JoinColumn({ name: 'projects_tenant_id' })
   tenant: Tenant;
+
+  @OneToMany(() => Task, (task) => task.project)
+  tasks: Task[];
 }
