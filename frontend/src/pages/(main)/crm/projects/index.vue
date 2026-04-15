@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useProjectsStore } from '@/stores/projects';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
-import ProjectFormDialog from './components/ProjectFormDialog.vue';
-import DeleteProjectDialog from './components/DeleteProjectDialog.vue';
-import { PlusIcon, PencilIcon, TrashIcon, SearchIcon, DotsVerticalIcon } from 'vue-tabler-icons';
+import ProjectFormDialog from '../components/ProjectFormDialog.vue';
+import DeleteProjectDialog from '../components/DeleteProjectDialog.vue';
+import { PlusIcon, PencilIcon, TrashIcon, SearchIcon, EyeIcon } from 'vue-tabler-icons';
+
+const router = useRouter();
 
 const page = ref({ title: 'Projects' });
 const breadcrumbs = ref([
@@ -169,6 +172,9 @@ function formatCurrency(value?: number) {
       <!-- Actions -->
       <template v-slot:item.actions="{ item }">
         <div class="d-flex justify-end gap-2">
+          <v-btn icon size="small" variant="text" color="info" @click="router.push(`/crm/projects/${item.id}`)">
+            <EyeIcon size="18" />
+          </v-btn>
           <v-btn icon size="small" variant="text" color="primary" @click="openEdit(item)">
             <PencilIcon size="18" />
           </v-btn>

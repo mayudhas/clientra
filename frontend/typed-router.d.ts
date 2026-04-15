@@ -35,9 +35,12 @@ declare module 'vue-router/auto-routes' {
       | '/(main)/crm/components/ClientFormDialog'
       | '/(main)/crm/components/DeleteClientDialog'
       | '/(main)/crm/components/DeleteProjectDialog'
+      | '/(main)/crm/components/DeleteTaskDialog'
       | '/(main)/crm/components/ProjectFormDialog'
+      | '/(main)/crm/components/TaskFormDialog'
       | '/(main)/crm/invoices'
-      | '/(main)/crm/projects'
+      | '/(main)/crm/projects/'
+      | '/(main)/crm/projects/[id]'
       | '/(main)/dashboard/default'
       | '/(main)/management/components/ChangePasswordDialog'
       | '/(main)/management/components/DeleteTenantDialog'
@@ -76,9 +79,23 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/(main)/crm/components/DeleteTaskDialog': RouteRecordInfo<
+      '/(main)/crm/components/DeleteTaskDialog',
+      '/crm/components/DeleteTaskDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/(main)/crm/components/ProjectFormDialog': RouteRecordInfo<
       '/(main)/crm/components/ProjectFormDialog',
       '/crm/components/ProjectFormDialog',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/components/TaskFormDialog': RouteRecordInfo<
+      '/(main)/crm/components/TaskFormDialog',
+      '/crm/components/TaskFormDialog',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -90,11 +107,18 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/(main)/crm/projects': RouteRecordInfo<
-      '/(main)/crm/projects',
+    '/(main)/crm/projects/': RouteRecordInfo<
+      '/(main)/crm/projects/',
       '/crm/projects',
       Record<never, never>,
       Record<never, never>,
+      | never
+    >,
+    '/(main)/crm/projects/[id]': RouteRecordInfo<
+      '/(main)/crm/projects/[id]',
+      '/crm/projects/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
       | never
     >,
     '/(main)/dashboard/default': RouteRecordInfo<
@@ -215,9 +239,12 @@ declare module 'vue-router/auto-routes' {
         | '/(main)/crm/components/ClientFormDialog'
         | '/(main)/crm/components/DeleteClientDialog'
         | '/(main)/crm/components/DeleteProjectDialog'
+        | '/(main)/crm/components/DeleteTaskDialog'
         | '/(main)/crm/components/ProjectFormDialog'
+        | '/(main)/crm/components/TaskFormDialog'
         | '/(main)/crm/invoices'
-        | '/(main)/crm/projects'
+        | '/(main)/crm/projects/'
+        | '/(main)/crm/projects/[id]'
         | '/(main)/dashboard/default'
         | '/(main)/management/components/ChangePasswordDialog'
         | '/(main)/management/components/DeleteTenantDialog'
@@ -254,9 +281,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/(main)/crm/components/DeleteTaskDialog.vue': {
+      routes:
+        | '/(main)/crm/components/DeleteTaskDialog'
+      views:
+        | never
+    }
     'src/pages/(main)/crm/components/ProjectFormDialog.vue': {
       routes:
         | '/(main)/crm/components/ProjectFormDialog'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/components/TaskFormDialog.vue': {
+      routes:
+        | '/(main)/crm/components/TaskFormDialog'
       views:
         | never
     }
@@ -266,9 +305,15 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/(main)/crm/projects.vue': {
+    'src/pages/(main)/crm/projects/index.vue': {
       routes:
-        | '/(main)/crm/projects'
+        | '/(main)/crm/projects/'
+      views:
+        | never
+    }
+    'src/pages/(main)/crm/projects/[id].vue': {
+      routes:
+        | '/(main)/crm/projects/[id]'
       views:
         | never
     }
